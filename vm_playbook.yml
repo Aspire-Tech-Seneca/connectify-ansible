@@ -1,0 +1,32 @@
+---
+- name: Azure Virtual Machine
+  hosts: azure_instances
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - vault.yml
+  vars:
+    front:
+      image: "wh0001/con-front"
+      tag: "latest" 
+
+  tasks:
+    - name: Ping the Linux VMs
+      ansible.builtin.ping:
+
+    - name: Pull the Front End Application image from Docker Hub
+      community.docker.docker_image:
+        name: "{{front.image}}:{{front.tag}}"
+        source: pull
+        tag: latest
+
+    - name: Run the Front End Application
+      community.docker.docker_container:
+        name: react-app
+        image: "{{front.image}}:{{front.tag}}"
+        state: started
+        restart_policy: unless-stopped
+        container_default_behavior: compatibility
+        ports:
+          - "80:3000"
+        
