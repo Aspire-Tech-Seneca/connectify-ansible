@@ -28,5 +28,5 @@
         restart_policy: unless-stopped
         container_default_behavior: compatibility
         ports:
-          - "80:3000"
+          - "80:80"
         
