@@ -1,32 +1,38 @@
 ---
 - name: Azure Virtual Machine
-  hosts: azure_instances
+  hosts: env_DEV
   gather_facts: yes
   become: yes
-  vars_files:
-    - vault.yml
   vars:
+    acr: "atcdevacr.azurecr.io"
     front:
-      image: "wh0001/con-front"
-      tag: "latest" 
+      image: "connectify-front-dev_test"
+      tag: "latest"
 
   tasks:
-    - name: Ping the Linux VMs
+
+    - name: PING | The Linux VMs
       ansible.builtin.ping:
 
-    - name: Pull the Front End Application image from Docker Hub
+    - name: Configure Docker credentials
+      community.docker.docker_login:
+        registry_url: atcdevacr.azurecr.io
+        username: {{ secrets.ACR_USERNAME }}
+        password: {{ secrets.ACR_PASSWORD }}
+        reauthorize: true
+
+    - name: DOCKER | Pull the Front End Application image from Docker Hub
       community.docker.docker_image:
-        name: "{{front.image}}:{{front.tag}}"
+        name: "{{acr}}/{{front.image}}:{{front.tag}}"
         source: pull
         tag: latest
 
-    - name: Run the Front End Application
+    - name: DOCKER | Run the Front End Application
       community.docker.docker_container:
         name: react-app
-        image: "{{front.image}}:{{front.tag}}"
+        image: "{{acr}}/{{front.image}}:{{front.tag}}"
         state: started
         restart_policy: unless-stopped
         container_default_behavior: compatibility
         ports:
           - "80:80"
-        
