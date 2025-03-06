@@ -1,3 +1,4 @@
+---
 plugin: azure.azcollection.azure_rm
 auth_source: auto
 include_vm_resource_groups:
@@ -7,6 +8,6 @@ keyed_groups:
     prefix: env_
     separator: ""
 filters:
-  instance-state-name: running
+  power_state: "running"  # Changed from instance-state-name
 compose:
-  ipv4_address: public_ip_address
+  ip: public_ip_address
