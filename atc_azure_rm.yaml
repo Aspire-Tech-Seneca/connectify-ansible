@@ -1,3 +1,4 @@
+---
 plugin: azure.azcollection.azure_rm
 auth_source: auto
 include_vm_resource_groups:
@@ -7,6 +8,6 @@ keyed_groups:
     prefix: env_
     separator: ""
 filters:
-  power_state: "VM running"  
+  power_state: "running"  
 compose:
-  ansible_host: public_ip_address 
+  ip: public_ip_address
