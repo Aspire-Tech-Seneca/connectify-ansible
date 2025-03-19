@@ -6,5 +6,5 @@
 *.key
 
 #local files and folders
-ansible.cfg
+ansible_local.cfg
 .bin
