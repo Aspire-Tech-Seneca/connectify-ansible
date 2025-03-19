@@ -1,4 +1,5 @@
 plugin: azure.azcollection.azure_rm
+azure_cloud: AzureCloud
 auth_source: auto
 include_vm_resource_groups:
   - ATC-DEV-RESOURCE-GROUP
@@ -7,6 +8,6 @@ keyed_groups:
     prefix: env_
     separator: ""
 filters:
-  power_state: "running"  
+  power_state: "VM running"
 compose:
-  ip: public_ip_address
+  ansible_host: ip
