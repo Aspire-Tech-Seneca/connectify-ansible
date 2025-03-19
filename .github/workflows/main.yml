@@ -47,5 +47,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible==10.7.0
           ansible-galaxy collection install azure.azcollection:2.7.0 --force
-          ansible-inventory -i atc_azure_rm.yaml --graph
+          ansible-inventory --graph
 
