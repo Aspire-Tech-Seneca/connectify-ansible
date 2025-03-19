@@ -31,7 +31,7 @@ jobs:
 
 
       - name: SETUP | Key Pair
-        working-directory: ./key_pairs
+        working-directory: key_pairs
         run: |
           echo "${{ secrets.KP }}" > connectify_kp.pem
           sudo chmod 600 connectify_kp.pem
