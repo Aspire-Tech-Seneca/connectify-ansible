@@ -1,5 +1,5 @@
 plugin: azure.azcollection.azure_rm
-azure_cloud: AzureCloud  # Specify your Azure environment (default: AzureCloud)
+cloud_environment: AzureCloud  # Specify your Azure environment (default: AzureCloud)
 auth_source: auto        # Let Ansible detect credentials automatically
 include_vm_resource_groups:
   - ATC-DEV-RESOURCE-GROUP
