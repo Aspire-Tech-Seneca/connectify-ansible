@@ -45,5 +45,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ansible
+          az account show
           ansible-inventory -i atc_azure_rm.yaml --graph
 
