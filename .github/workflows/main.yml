@@ -31,7 +31,7 @@ jobs:
 
 
       - name: SETUP | Key Pair
-        working-directory: ~/.ssh
+        working-directory: ./key_pairs
         run: |
           echo "${{ secrets.KP }}" > connectify_kp.pem
           sudo chmod 600 connectify_kp.pem
@@ -46,5 +46,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
           ansible-galaxy collection install azure.azcollection
-          ansible-inventory -i atc_azure_rm.yaml --private-key  -- graph
+          ansible-inventory -i atc_azure_rm.yaml --private-key ./key_pairs/connectify_kp.pem  --graph
 
