@@ -1,0 +1,10 @@
+# Virtual environment
+.venv/
+
+# SSH keys or sensitive files
+*.pem
+*.key
+
+#local files and folders
+ansible.cfg
+.bin

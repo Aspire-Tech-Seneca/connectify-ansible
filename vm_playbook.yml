@@ -1,0 +1,112 @@
+---
+- name: Azure Virtual Machine
+  hosts: env_DEV
+  gather_facts: yes
+  become: yes
+  vars:
+    cred: 
+      USERNAME: ''
+      PASSWORD: ''
+    acr: "atcdevacr.azurecr.io"
+    frontend:
+      image: "connectify-front-dev"
+      tag: "latest"
+    backend:
+      image: "connectify-backend-dev"
+      tag: "latest"
+      DEBUG: "False"
+      SECRET_KEY: ''
+      AZURE_BLOB_CONNECTION_STRING: ''
+    db:
+      POSTGRES_HOST: ''
+      POSTGRES_PORT: ''
+      POSTGRES_USER: ''
+      POSTGRES_PASSWORD: ''
+      POSTGRES_DB: ''
+  tasks:
+
+    - name: PING | The Linux VMs
+      ansible.builtin.ping:
+
+    - name: DOCKER | Configure Docker credentials
+      community.docker.docker_login:
+        registry_url: "{{acr}}"
+        username: "{{cred.USERNAME}}"
+        password: "{{cred.PASSWORD}}"
+        reauthorize: true
+
+
+    - name: DOCKER | Pull - Postgres
+      community.docker.docker_image:
+        name: "postgres"
+        source: pull
+        tag: latest
+
+
+    - name: DOCKER | Pull - Backend
+      community.docker.docker_image:
+        name: "{{acr}}/{{backend.image}}:{{backend.tag}}"
+        source: pull
+        tag: latest
+
+    - name: DOCKER | Pull - Frontend
+      community.docker.docker_image:
+        name: "{{acr}}/{{frontend.image}}:{{frontend.tag}}"
+        source: pull
+        tag: latest
+
+    - name: DOCKER | Run - Postgres
+      community.docker.docker_container:
+        name: postgres
+        image: "postgres"
+        env:
+          POSTGRES_HOST: "{{db.POSTGRES_HOST}}"
+          POSTGRES_PORT: "{{db.POSTGRES_HOST}}"
+          POSTGRES_USER: "{{db.POSTGRES_HOST}}"
+          POSTGRES_PASSWORD: "{{db.POSTGRES_HOST}}"
+          POSTGRES_DB: "{{db.POSTGRES_HOST}}"
+        state: started
+        restart_policy: unless-stopped
+        container_default_behavior: compatibility
+        ports:
+          - "5432:5432"
+
+    - name: DOCKER | Run - Backend
+      community.docker.docker_container:
+        name: django
+        image: "{{acr}}/{{backend.image}}:{{backend.tag}}"
+        env:
+          DEBUG: "False"
+          SECRET_KEY: "{{backend.SECRET_KEY}}"
+          AZURE_BLOB_CONNECTION_STRING: "{{backend.AZURE_BLOB_CONNECTION_STRING}}"
+          POSTGRES_HOST: "{{db.POSTGRES_HOST}}"
+          POSTGRES_PORT: "{{db.POSTGRES_PORT}}"
+          POSTGRES_USER: "{{db.POSTGRES_USER}}"
+          POSTGRES_PASSWORD: "{{db.POSTGRES_PASSWORD}}"
+          POSTGRES_DB: "{{db.POSTGRES_DB}}"
+        command: python manage.py runserver 0.0.0.0:8000
+        state: started
+        restart_policy: unless-stopped
+        container_default_behavior: compatibility
+        ports:
+          - "8000:8000"
+
+
+    # - name: DOCKER | exec - Backend
+    #   community.docker.docker_container_exec:
+    #     container: django
+    #     env:
+    #       DEBUG: "False"
+    #       SECRET_KEY: 
+    #       AZURE_BLOB_CONNECTION_STRING: 
+    #       POSTGRES_HOST: 
+    #       POSTGRES_PORT: 
+    #       POSTGRES_USER: 
+    #       POSTGRES_PASSWORD: 
+    #       POSTGRES_DB: 
+    #     command: "python manage.py migrate"
+    #   register: result
+
+    # - name: DOCKER | exec output
+    #   ansible.builtin.debug:
+    #     var: result.stdout

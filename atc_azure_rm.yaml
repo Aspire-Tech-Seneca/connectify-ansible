@@ -1,0 +1,13 @@
+---
+plugin: azure.azcollection.azure_rm
+auth_source: auto
+include_vm_resource_groups:
+  - ATC-DEV-RESOURCE-GROUP
+keyed_groups:
+  - key: tags.Environment
+    prefix: env_
+    separator: ""
+filters:
+  power_state: "running"  # Changed from instance-state-name
+compose:
+  ip: public_ip_address
