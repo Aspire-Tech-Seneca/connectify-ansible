@@ -20,9 +20,9 @@ jobs:
       AZURE_SECRET: ${{ secrets.AZURE_SECRET }}
       AZURE_TENANT: ${{ secrets.AZURE_TENANT }}
       ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
-      DATABASE_SECRETS: ${{ secrets.DATABASE_SECRETS }}
-      BACKEND_SECRETS: ${{ secrets.BACKEND_SECRETS }}
-      FRONTEND_SECRETS: ${{ secrets.FRONTEND_SECRETS }}
+      DATABASE_SECRETS: '${{ secrets.DATABASE_SECRETS }}'
+      BACKEND_SECRETS: '${{ secrets.BACKEND_SECRETS }}'
+      FRONTEND_SECRETS: '${{ secrets.FRONTEND_SECRETS }}'
     steps:
 
       - name: GIT | Checkout
