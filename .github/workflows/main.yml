@@ -7,8 +7,13 @@ on:
   pull_request:
     branches: [ "main" ]
 
+  repository_dispatch:
+      types:
+        - build_complete
 
-  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   ansible-deploy:
@@ -84,17 +89,22 @@ jobs:
           pip install ansible==10.7.0
 
 
-      - name: Ansible | Execute - DATABASE
+      - name: Use Passed Value
+        if: github.event_name == 'repository_dispatch' || github.ref == 'refs/heads/dev_test' && github.event_name == 'push'
         run: |
-          ansible-playbook database_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+          echo "Value passed from first repo: ${{ github.event.client_payload.trigger }}"
+
+      # - name: Ansible | Execute - DATABASE
+      #   run: |
+      #     ansible-playbook database_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
           
 
-      - name: Ansible | Execute - BACKEND
-        run: |
-          ansible-playbook backend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+      # - name: Ansible | Execute - BACKEND
+      #   run: |
+      #     ansible-playbook backend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
           
           
-      - name: Ansible | Execute - FRONTEND
-        run: |
-          ansible-playbook frontend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+      # - name: Ansible | Execute - FRONTEND
+      #   run: |
+      #     ansible-playbook frontend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
           
