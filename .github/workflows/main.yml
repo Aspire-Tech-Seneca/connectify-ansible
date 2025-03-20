@@ -14,12 +14,10 @@ jobs:
   ansible-deploy:
     runs-on: ubuntu-latest
     env:
-      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SECRET: ${{ secrets.AZURE_SECRET }}
       AZURE_TENANT: ${{ secrets.AZURE_TENANT }}
-      ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
       DATABASE_SECRETS: '${{ secrets.DATABASE_SECRETS }}'
       BACKEND_SECRETS: '${{ secrets.BACKEND_SECRETS }}'
       FRONTEND_SECRETS: '${{ secrets.FRONTEND_SECRETS }}'
@@ -88,6 +86,5 @@ jobs:
 
       - name: Ansible | Execute
         run: |
-
-          ansible-playbook frontend_playbook.yml -i "74.235.209.82," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -vvv
+          ansible-playbook frontend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
           
