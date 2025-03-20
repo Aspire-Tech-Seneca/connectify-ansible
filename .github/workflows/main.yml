@@ -76,7 +76,7 @@ jobs:
             }
   
 
-      - name: Ansible | Setup and Execute
+      - name: Ansible | Setup
         run: |
           python3 -m venv .venv
           source .venv/bin/activate
@@ -84,7 +84,17 @@ jobs:
           pip install ansible==10.7.0
 
 
-      - name: Ansible | Execute
+      - name: Ansible | Execute - DATABASE
+        run: |
+          ansible-playbook database_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+          
+
+      - name: Ansible | Execute - BACKEND
+        run: |
+          ansible-playbook backend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+          
+          
+      - name: Ansible | Execute - FRONTEND
         run: |
           ansible-playbook frontend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
           
