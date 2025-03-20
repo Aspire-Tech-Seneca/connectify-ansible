@@ -31,8 +31,8 @@ jobs:
       - name: SETUP | Key Pair
         run: |
           mkdir key_pairs
-          echo "${{ secrets.KP }}" > connectify_kp
-          sudo chmod 600 connectify_kp
+          echo "${{ secrets.KP }}" > ./key_pairs/connectify_kp
+          sudo chmod 600 ./key_pairs/connectify_kp
 
       - name: Python | Install
         uses: actions/setup-python@v4
