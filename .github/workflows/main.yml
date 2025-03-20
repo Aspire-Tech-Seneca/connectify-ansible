@@ -2,14 +2,8 @@
 name: Ansible Deployment
 
 on:
-  push:
-    branches: [ "dev_test" ]
-  pull_request:
-    branches: [ "main" ]
-
   repository_dispatch:
-      types:
-        - build_complete
+    types: [build_complete]
 
 permissions:
   contents: write
