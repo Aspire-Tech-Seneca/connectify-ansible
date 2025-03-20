@@ -85,4 +85,7 @@ jobs:
           python3 -m pip install --upgrade pip
           pip install ansible==10.7.0
 
-          ansible-playbook frontend_playbook.yaml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}} ansible_ssh_private_key_file=.key_pairs/connectify_kp.pub"
+
+      - name: Ansible | Execute
+        run: |
+          ansible-playbook frontend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}} ansible_ssh_private_key_file=.key_pairs/connectify_kp.pub"
