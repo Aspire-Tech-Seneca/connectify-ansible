@@ -1,6 +1,6 @@
+---
 plugin: azure.azcollection.azure_rm
-cloud_environment: AzureCloud  # Specify your Azure environment (default: AzureCloud)
-auth_source: auto        # Let Ansible detect credentials automatically
+auth_source: auto
 include_vm_resource_groups:
   - ATC-DEV-RESOURCE-GROUP
 keyed_groups:
@@ -8,6 +8,6 @@ keyed_groups:
     prefix: env_
     separator: ""
 filters:
-  power_state: "VM running"  # Correct format for Azure filters
+  power_state: "running"  
 compose:
-  ansible_host: public_ip_address  # Assign the IP as the ansible_host variable
+  ip: public_ip_address

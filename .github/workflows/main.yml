@@ -49,7 +49,8 @@ jobs:
           ansible-galaxy collection install azure.azcollection:2.7.0 --force
 
           ansible --version
-          ansible-galaxy collection list | grep azure.azcollection
+
+          ansible-galaxy collection list azure.azcollection
 
           ansible-inventory -i ./atc_azure_rm.yaml --graph
 
