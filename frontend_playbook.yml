@@ -1,5 +1,5 @@
 ---
-- name: Backend Playbook
+- name: Front Playbook
   hosts: all  
   gather_facts: yes
   become: yes  

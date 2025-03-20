@@ -88,7 +88,7 @@ jobs:
 
       - name: Ansible | Execute
         run: |
-          ls
-          ansible-playbook frontend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}} ansible_ssh_private_key_file=./key_pairs/connectify_kp"
+          ls keypairs
+          ansible-playbook frontend_playbook.yml -i "${{secrets.HOST_VM}}," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp"
 
           
