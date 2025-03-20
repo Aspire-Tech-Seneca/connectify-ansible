@@ -1,0 +1,50 @@
+---
+- name: Backend Playbook
+  hosts: all  
+  gather_facts: yes
+  become: yes  
+  vars:
+    IMG: "connectify-backend-dev"
+    TAG: "latest"
+  tasks:
+
+    - name: PING | VM
+      ansible.builtin.ping:
+
+    - name: ENV | Setup
+      set_fact:
+        secrets: "{{ lookup('env', 'BACKEND_SECRETS') | from_json }}"
+
+    - name: DOCKER | Configure Docker credentials
+      community.docker.docker_login:
+        registry_url: "{{secrets.REGISTRY}}"
+        username: "{{secrets.USERNAME}}"
+        password: "{{secrets.PASSWORD}}"
+        reauthorize: true
+
+    - name: DOCKER | Pull - BACKEND
+      community.docker.docker_image:
+        name: "{{secrets.REGISTRY}}/{{IMG}}"
+        source: pull
+        tag: "{{TAG}}"
+
+
+    - name: DOCKER | Recreate - BACKEND
+      community.docker.docker_container:
+        name: django
+        image: "{{secrets.REGISTRY}}/{{IMG}}:{{TAG}}"
+        env:
+          DEBUG: "False"
+          SECRET_KEY: "{{secrets.SECRET_KEY}}"
+          AZURE_BLOB_CONNECTION_STRING: "{{secrets.AZURE_BLOB_CONNECTION_STRING}}"
+          POSTGRES_HOST: "{{secrets.POSTGRES_HOST}}"
+          POSTGRES_PORT: "{{secrets.POSTGRES_PORT}}"
+          POSTGRES_USER: "{{secrets.POSTGRES_USER}}"
+          POSTGRES_PASSWORD: "{{secrets.POSTGRES_PASSWORD}}"
+          POSTGRES_DB: "{{secrets.POSTGRES_DB}}"
+        state: started
+        recreate: true
+        restart_policy: unless-stopped
+        container_default_behavior: compatibility
+        ports:
+          - "8000:8000"
