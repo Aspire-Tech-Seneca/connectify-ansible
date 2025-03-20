@@ -23,7 +23,7 @@
 
     - name: DOCKER | Pull - DATABASE
       community.docker.docker_image:
-        name: "{{secrets.REGISTRY}}/{{IMG}}"
+        name: "{{IMG}}"
         source: pull
         tag: "{{TAG}}"
 
@@ -31,7 +31,7 @@
     - name: DOCKER | Recreate - DATABASE
       community.docker.docker_container:
         name: postgres
-        image: "{{secrets.REGISTRY}}/{{IMG}}:{{TAG}}"
+        image: "{{IMG}}:{{TAG}}"
         env:
           POSTGRES_HOST: "{{secrets.POSTGRES_HOST}}"
           POSTGRES_PORT: "{{secrets.POSTGRES_PORT}}"
