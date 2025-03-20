@@ -13,18 +13,18 @@
 
     - name: ENV | Setup
       set_fact:
-        secrets: "{{ lookup('env', 'FRONTEND_SECRETS') | from_json }}"
+        env_secrets: "{{ lookup('env', 'FRONTEND_SECRETS') | from_json }}"
 
     - name: DOCKER | Configure Docker credentials
       community.docker.docker_login:
-        registry_url: "{{secrets.REGISTRY}}"
-        username: "{{secrets.USERNAME}}"
-        password: "{{secrets.PASSWORD}}"
+        registry_url: "{{env_secrets.REGISTRY}}"
+        username: "{{env_secrets.USERNAME}}"
+        password: "{{env_secrets.PASSWORD}}"
         reauthorize: true
 
     - name: DOCKER | Pull - FRONTEND
       community.docker.docker_image:
-        name: "{{secrets.REGISTRY}}/{{IMG}}"
+        name: "{{env_secrets.REGISTRY}}/{{IMG}}"
         source: pull
         tag: "{{TAG}}"
 
@@ -32,12 +32,12 @@
     - name: DOCKER | Recreate - FRONTEND
       community.docker.docker_container:
         name: react
-        image: "{{secrets.REGISTRY}}/{{IMG}}:{{TAG}}"
+        image: "{{env_secrets.REGISTRY}}/{{IMG}}:{{TAG}}"
         env:
-          REACT_APP_BASE_URL: "{{secrets.REACT_APP_BASE_URL}}"
-          REACT_APP_BLOB_STORAGE_BASE_URL: "{{secrets.REACT_APP_BLOB_STORAGE_BASE_URL}}"
-          REACT_APP_BLOB_STORAGE_EVENT_IMAGES: "{{secrets.REACT_APP_BLOB_STORAGE_EVENT_IMAGES}}"
-          REACT_APP_BLOB_STORAGE_GALLERY_IMAGES: "{{secrets.REACT_APP_BLOB_STORAGE_GALLERY_IMAGES}}"
+          REACT_APP_BASE_URL: "{{env_secrets.REACT_APP_BASE_URL}}"
+          REACT_APP_BLOB_STORAGE_BASE_URL: "{{env_secrets.REACT_APP_BLOB_STORAGE_BASE_URL}}"
+          REACT_APP_BLOB_STORAGE_EVENT_IMAGES: "{{env_secrets.REACT_APP_BLOB_STORAGE_EVENT_IMAGES}}"
+          REACT_APP_BLOB_STORAGE_GALLERY_IMAGES: "{{env_secrets.REACT_APP_BLOB_STORAGE_GALLERY_IMAGES}}"
         state: started
         recreate: true
         restart_policy: unless-stopped
