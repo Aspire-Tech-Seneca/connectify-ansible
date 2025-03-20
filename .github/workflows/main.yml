@@ -88,7 +88,5 @@ jobs:
 
       - name: Ansible | Execute
         run: |
-          ls -ltra ./key_pairs
-          ansible-playbook frontend_playbook.yml -i "74.235.209.82," -e "ansible_user=${{secrets.ANSIBLE_USER}}" -e "ansible_ssh_private_key_file=./key_pairs/connectify_kp" 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -vvv
-
+          ansible-playbook -i "74.235.209.82," --private-key ./key_pairs/connectify_kp -u ${{ secrets.ANSIBLE_USER }} -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
           
