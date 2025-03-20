@@ -1,0 +1,18 @@
+---
+- name: Example Playbook for a Target Host
+  hosts: all  # Matches all hosts specified inline during execution
+  tasks:
+    - name: Ping the host
+      ping:
+
+    - name: Access and parse the environment variable
+      set_fact:
+        my_object: "{{ lookup('env', 'MY_OBJECT') | from_json }}"
+
+    - name: Display the object
+      debug:
+        var: my_object
+
+    - name: Access individual keys
+      debug:
+        msg: "Key1: {{ my_object.key1 }}, Key2: {{ my_object.key2 }}"
