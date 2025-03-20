@@ -32,5 +32,19 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          mkdir key_pairs
+          echo "${{ secrets.KP }}" > connectify_kp.pem
+          sudo chmod 600 connectify_kp.pem
+
+      - name: Python | Install
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Ansible | Setup
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          python3 -m pip install --upgrade pip
+          pip install ansible==10.7.0
+
